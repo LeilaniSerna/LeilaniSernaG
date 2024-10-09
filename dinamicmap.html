@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="dinamicmap.js"></script>
+    <style>
+        #map{
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=15.0">
+    <title>Mapa Estatico</title>
+    <link rel="stylesheet" href="dinamicmap.css">
+</head>
+<body>
+
+    <div class="main-container">
+        <h1>Mapa Dinamico</h1>
+
+        <input  id="pac-input" class="controls" type="text" placeholder="buscar lugares">
+
+        
+        <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3pKkj-H_bOea9hkxpuyobPiOyuWDCHeY&libraries=places&callback=initMap">
+        </script>
+
+        <!-- AGREGAR UN DIV PARA METER EL MAPA -->
+        <div id="map"></div>
+    </div>
+     
+
+
+</body>
+</html>

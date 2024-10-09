@@ -1,4 +1,4 @@
-let map;
+let map, directionsService,directionsRender;
 
 function initMap() {
     const myLatLng = { lat: 21.81428552567272, lng: -102.76898188728283 };
@@ -6,6 +6,14 @@ function initMap() {
         zoom: 16,
         center: myLatLng,
     });
+
+    //servicio renderizador de direcciones (ruta)
+    directionsService= new google.maps.DirectionsService();
+    directionsRender = new google.maps.DirectionsRenderer();
+    directionsRender.setMap(map);
+
+
+
     const image =
         "./337756.png";  //CREAMOS LA CONSTANTE CON LA RUTA DE LA IMAGEN
     new google.maps.Marker({
@@ -73,14 +81,59 @@ function initMap() {
                 } else {
                     bounds.extend(place.geometry.location);
                 }
+
+                //calcul y mostrar la ruta
+                calculateAndDisplayRoute(place.geometry.location);
+
             });
             map.fitBounds(bounds);
         }
-    )
+    );
+
+    //obtener la ubicacion actual de usuario
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                };
+                map.setCenter(pos);
+            },
+            () => {
+                console.log("Error obteniendo la ubicacion actual.");
+            }
+        );
+    }
 
 
+}
 
+// Función para calcular y mostrar la ruta desde la ubicación actual hasta el lugar seleccionado
+function calculateAndDisplayRoute(destination) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const origin = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+            };
 
+            directionsService.route(
+                {
+                    origin: origin,
+                    destination: destination,
+                    travelMode: google.maps.TravelMode.DRIVING, // Puedes cambiarlo a WALKING, BICYCLING, etc.
+                },
+                (response, status) => {
+                    if (status === "OK") {
+                        directionsRender.setDirections(response);
+                    } else {
+                        console.log("Direcciones fallidas: " + status);
+                    }
+                }
+            );
+        });
+    }
 }
 
 initMap();
